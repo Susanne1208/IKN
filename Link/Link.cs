@@ -109,9 +109,11 @@ namespace Linklaget
 		public int receive (ref byte[] buf)
 		{
 	    	// TO DO Your own code
+			var i = 0;
 
+			//Does not read bytes unless it begins with delimiter - 'A'
 			while (true) {
-				if (serialPort.ReadByte == DELIMITER)
+				if (serialPort.ReadByte() == DELIMITER)
 					break;
 			}
 
@@ -136,7 +138,7 @@ namespace Linklaget
 					}
 				}
 				else
-					buf[i++] = rcvByte;
+					buf[i++] = tempByte;
 
 				tempByte = (byte)serialPort.ReadByte();
 			}
