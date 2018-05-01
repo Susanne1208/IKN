@@ -20,6 +20,24 @@ namespace Application
 		private file_server ()
 		{
 			// TO DO Your own code
+			//initialiser variabler 
+			string filePath = string.Empty;
+			string fileName = string.Empty;
+			long fileSizeLong = 0;  
+			byte[] tempBuf = 0;
+
+			//string fileSizeStr = string.Empty;
+
+			Transport t1 = new Transport (BUFSIZE, APP);
+			Console.WriteLine("Server started");
+
+			filePath = t1.receive(ref tempBuf); // wait for client input
+
+			fileName = LIB.extractFileName ();
+			Console.WriteLine($"Server looking for file {filename}");
+
+			fileSizeLong = LIB.check_File_Exists (fileName);
+			sendFile (fileName, fileSizeLong, t1);
 		}
 
 		/// <summary>
@@ -37,6 +55,23 @@ namespace Application
 		private void sendFile(String fileName, long fileSize, Transport transport)
 		{
 			// TO DO Your own code
+			Byte[] bufferServer = new Byte[BUFSIZE]; 
+
+			Console.WriteLine (fileName);
+
+			FileStream Fs = new FileStream (fileName, FileMode.Open, FileAccess.Read);
+
+			int bytesRead = Fs.Read(bufferServer, 0, BUFSIZE); //Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
+			io.Write (bufferServer, 0, bytesRead);
+			//Whileloop fortsætter, så længe der er bytes at sende (fra fil)
+			while(bytesRead > 0)
+			{
+				bytesRead = Fs.Read(bufferServer, 0, BUFSIZE);
+				io.Write (bufferServer, 0, bytesRead);
+
+			}
+			Console.WriteLine ("File sent");
+			Fs.Close ();
 		}
 
 		/// <summary>
@@ -47,7 +82,10 @@ namespace Application
 		/// </param>
 		public static void Main (string[] args)
 		{
-			new file_server();
+			Console.WriteLine ("Server starts...");
+			while (true) {
+				new file_server ();
+			}
 		}
 	}
 }
