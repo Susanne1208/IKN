@@ -133,7 +133,9 @@ namespace Transportlaget
 			// TO DO Your own code
 			//Midlertidig kode
 			int size;
-			size = link.receive(buf);
+			size = link.receive (ref buf);
+				//receive(buf);
+			return size;
 		}
 	}
 }
