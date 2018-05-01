@@ -69,7 +69,8 @@ namespace Linklaget
 		public void send (byte[] buf, int size)
 		{
 			// TO DO Your own code
-			string xx = Encoding.ASCII.GetBytes(buf);
+			//GetBytes, hvilket index skal den starte ved?? 0 eller 1? :-)
+			string xx = Encoding.ASCII.GetBytes(buf, 0, size);
 			StringBuilder sb = new StringBuilder (xx);
 
 			sb.Append (DELIMITER);
@@ -142,6 +143,7 @@ namespace Linklaget
 
 				tempByte = (byte)serialPort.ReadByte();
 			}
+
 			return i;
 		}
 
