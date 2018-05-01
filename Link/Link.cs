@@ -1,6 +1,7 @@
 using System;
 using System.IO.Ports;
 using System.Text;
+using Library;
 
 /// <summary>
 /// Link.
@@ -66,7 +67,8 @@ namespace Linklaget
 		/// </param>
 		public void send (byte[] buf, int size)
 		{
-			string xx = Encoding.ASCII.GetBytes(buffer);
+			// TO DO Your own code
+			string xx = Encoding.ASCII.GetBytes(buf);
 			StringBuilder sb = new StringBuilder (xx);
 
 			sb.Append (DELIMITER);
@@ -88,7 +90,7 @@ namespace Linklaget
 			string SendData = sb.ToString ();
 			serialPort.Write (SendData);
 
-			// TO DO Your own code
+
 		}
 
 		/// <summary>
@@ -103,6 +105,17 @@ namespace Linklaget
 		public int receive (ref byte[] buf)
 		{
 	    	// TO DO Your own code
+			int bytesRead;
+			do
+			{
+				bytesRead = serialPort.ReadByte(buf);
+			}while(bytesRead > 0);
+
+			string xx = Encoding.ASCII.GetBytes(buf);
+			StringBuilder sb = new StringBuilder (buf);
+
+
+
 			return 0;
 		}
 	}
