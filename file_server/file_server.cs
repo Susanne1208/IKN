@@ -34,8 +34,8 @@ namespace Application
 			filePath = t1.receive(ref tempBuf); // wait for client input
 
 			fileName = LIB.extractFileName ();
-			Console.WriteLine($"Server looking for file {filename}");
 
+			Console.WriteLine($"Server looking for file {fileName}");
 			fileSizeLong = LIB.check_File_Exists (fileName);
 			sendFile (fileName, fileSizeLong, t1);
 		}
@@ -55,6 +55,8 @@ namespace Application
 		private void sendFile(String fileName, long fileSize, Transport transport)
 		{
 			// TO DO Your own code
+			// Transport.send(byte[] buf, int size)
+
 			Byte[] bufferServer = new Byte[BUFSIZE]; 
 
 			Console.WriteLine (fileName);
@@ -70,7 +72,7 @@ namespace Application
 				io.Write (bufferServer, 0, bytesRead);
 
 			}
-			Console.WriteLine ("File sent");
+			Console.WriteLine ("File sent!");
 			Fs.Close ();
 		}
 
