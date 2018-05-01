@@ -76,22 +76,25 @@ namespace Linklaget
 
 			for (int i = 0; i < size; i++) 
 			{
-				if (buf [i] == 'A')
+				switch (buf [i]) 
+				{
+				case DELIMITER:
 					sb.Append ("BC");
-
-				else if (buf [i] == 'B')
+					break;
+				case (byte)'B':
 					sb.Append ("BD");
-
-				else 
+					break;
+				default:
 					sb.Append(buf[i]);
-				
+					break;
+				}
 			}
+
 			sb.Append (DELIMITER);
+
 
 			string SendData = sb.ToString ();
 			serialPort.Write (SendData);
-
-
 		}
 
 		/// <summary>
