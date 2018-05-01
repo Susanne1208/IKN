@@ -118,6 +118,8 @@ namespace Transportlaget
 		public void send(byte[] buf, int size)
 		{
 			// TO DO Your own code
+			//Midlertidig kode
+			link.send(buf, size);
 		}
 
 		/// <summary>
@@ -129,6 +131,9 @@ namespace Transportlaget
 		public int receive (ref byte[] buf)
 		{
 			// TO DO Your own code
+			//Midlertidig kode
+			int size;
+			size = link.receive(buf);
 		}
 	}
 }

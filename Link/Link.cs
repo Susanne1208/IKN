@@ -106,18 +106,39 @@ namespace Linklaget
 		public int receive (ref byte[] buf)
 		{
 	    	// TO DO Your own code
-			int bytesRead;
-			do
+
+			while (true) {
+				if (serialPort.ReadByte == DELIMITER)
+					break;
+			}
+
+			var tempByte = (byte)serialPort.ReadByte();
+
+			while (tempByte != DELIMITER)
 			{
-				bytesRead = serialPort.ReadByte(buf);
-			}while(bytesRead > 0);
+				if (tempByte == (byte)'B')
+				{
+					var newByte = serialPort.ReadByte();
 
-			string xx = Encoding.ASCII.GetBytes(buf);
-			StringBuilder sb = new StringBuilder (buf);
+					switch (newByte)
+					{
+					case (byte)'C':
+						buf[i++] = (byte)'A';
+						break;
+					case (byte)'D':
+						buf[i++] = (byte)'B';
+						break;
+					default:
+						return 0;
+					}
+				}
+				else
+					buf[i++] = rcvByte;
 
-
-
-			return 0;
+				tempByte = (byte)serialPort.ReadByte();
+			}
+			return i;
 		}
+
 	}
 }
