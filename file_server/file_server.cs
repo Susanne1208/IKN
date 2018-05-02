@@ -14,6 +14,7 @@ namespace Application
 		private const int BUFSIZE = 1000;
 		private const string APP = "FILE_SERVER";
 		Transport t1;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="file_server"/> class.
 		/// </summary>
@@ -29,7 +30,7 @@ namespace Application
 			//string fileSizeStr = string.Empty;
 			Console.WriteLine("Inside file_server");
 			//Fejler her!!
-			t1 = new Transport (BUFSIZE, APP);
+			t1 = new Transport(BUFSIZE, APP);
 			Console.WriteLine("Server started");
 
 			t1.receive (ref tempBuf); 

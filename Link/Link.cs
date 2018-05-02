@@ -69,8 +69,6 @@ namespace Linklaget
 		public void send (byte[] buf, int size)
 		{
 			// TO DO Your own code
-			//GetBytes, hvilket index skal den starte ved?? 0 eller 1? :-)
-			//string xx = Encoding.ASCII.GetBytes(buf, 1, size);
 			string xx = Encoding.ASCII.GetString(buf);
 			StringBuilder sb = new StringBuilder (xx);
 
