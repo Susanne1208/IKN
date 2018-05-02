@@ -27,7 +27,8 @@ namespace Application
 			byte[] tempBuf = new byte[BUFSIZE];
 
 			//string fileSizeStr = string.Empty;
-
+			Console.WriteLine("Inside file_server");
+			//Fejler her!!
 			t1 = new Transport (BUFSIZE, APP);
 			Console.WriteLine("Server started");
 
