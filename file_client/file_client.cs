@@ -13,6 +13,7 @@ namespace Application
 		/// </summary>
 		private const int BUFSIZE = 1000;
 		private const string APP = "FILE_CLIENT";
+		private Transport t1;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="file_client"/> class.
@@ -29,40 +30,39 @@ namespace Application
 	    private file_client(String[] args)
 	    {
 	    	// TO DO Your own code
-			string filePath = "";
 			long fileSize = 0;
+			byte[] filePathBuf;
+			string filePath;
+			string fileName;
+			t1 = new Transport();
 
-			TcpClient ClientSocket = new TcpClient ();
-			try
-			{
-				ClientSocket.Connect(args[0], PORT);
-				Console.WriteLine("Connected to {0}, port {1}", args[0], PORT);
-			}
-			catch
-			{
-				Console.WriteLine ("No connection");
-			}
-			NetworkStream serverStream = ClientSocket.GetStream();
+			//Receives filepath as a string. 
+			filePath = args [0];
 
-			//Saving requested file in variable filePath
-			filePath = args[1];
+			//Converts to bytes
+			filePathBuf = Encoding.ASCII.GetBytes(filePath);
+
+			//Get filesize
+			fileSize = LIB.check_File_Exists (filePath);
+
+			//Sends filepath to server
 			Console.WriteLine ("Requesting file...");
-			LIB.writeTextTCP (serverStream, filePath);
-
-			fileSize = LIB.getFileSizeTCP (serverStream);
+			t1.send (filePathBuf, fileSize);
 
 			//If file does not exist, keep asking for existing file
-			while (fileSize == 0) {
+			/*while (fileSize == 0) {
 				Console.WriteLine ("!File not found!");
 				Console.WriteLine ("Enter new file: ");
 				filePath = Console.ReadLine ();
 
 				Console.WriteLine ("Requesting file...");
-				LIB.writeTextTCP (serverStream, filePath);
+				//LIB.writeTextTCP (serverStream, filePath);
 				fileSize = LIB.getFileSizeTCP (serverStream);
-			}
+			}*/
+
+			//Receives file from server
 			Console.WriteLine ("Receiving file...");
-			receiveFile (filePath, serverStream);
+			receiveFile (filePath, t1);
 	    }
 
 		/// <summary>
@@ -74,15 +74,12 @@ namespace Application
 		/// <param name='transport'>
 		/// Transportlaget
 		/// </param>
-		private void receiveFile (String fileName, Transport transport)
+		private void receiveFile (String filePath, Transport transport)
 		{
-			// TO DO Your own code
-			string fileName = string.Empty;
-			string fileDirectory = string.Empty;
-			long fileSize = 0;
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFSIZE];
-
+			int fileSize; 
+			byte[] receiveBuf = new byte[BUFSIZE];
+			string fileDirectory;
+			string fileName;
 			//Create directory for file
 			fileDirectory = "/root/Desktop/ServerFiles/";
 			Directory.CreateDirectory (fileDirectory);
@@ -91,15 +88,14 @@ namespace Application
 			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
 			Console.WriteLine ("Reading file " + fileName + "...");
 
-			//Writes into file as long as it receives bytes, bytesRead>0
 			do
 			{
-				bytesRead = io.Read (buffer, 0, BUFSIZE);
-				Fs.Write(buffer, 0, bytesRead);
-				Console.WriteLine("Read bytes: " + bytesRead.ToString());
-			}while (bytesRead > 0);
+				fileSize = transport.receive(ref receiveBuf);
+				Fs.Write(receiveBuf, 0, fileSize);
 
-			//Lukker fil
+			}while(fileSize > 0);
+
+			//Closes file after writing into it. 
 			Fs.Close ();
 		}
 
