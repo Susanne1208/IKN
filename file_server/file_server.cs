@@ -68,13 +68,13 @@ namespace Application
 
 			FileStream Fs = new FileStream (filePath, FileMode.Open, FileAccess.Read);
 
-			int bytesRead = Fs.Read(bufferServer, 0, BUFSIZE); //Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
+			int bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1 - Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
 			transport.send(bufferServer, bytesRead);
 
 			//Whileloop fortsætter, så længe der er bytes at sende (fra fil)
 			while(bytesRead > 0)
 			{
-				bytesRead = Fs.Read(bufferServer, 0, BUFSIZE);
+				bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1
 				transport.send(bufferServer, bytesRead);
 			}
 

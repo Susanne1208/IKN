@@ -34,7 +34,7 @@ namespace Application
 			byte[] filePathBuf;
 			string filePath;
 			string fileName;
-			t1 = new Transport();
+			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
 			filePath = args [0];
