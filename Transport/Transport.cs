@@ -70,24 +70,21 @@ namespace Transportlaget
 		/// </returns>
 		private byte receiveAck()
 		{
-			recvSize = link.receive(ref buffer);
-			dataReceived = true;
+			byte[] buf = new byte[(int)TransSize.ACKSIZE];
+			int size = link.receive (ref buf);
+			if (size != (int)TransSize.ACKSIZE)
+				return DEFAULT_SEQNO;
+			if(!checksum.checkChecksum(buf, (int)TransSize.ACKSIZE) ||
+				buf[(int)TransCHKSUM.SEQNO] != seqNo ||
+				buf[(int)TransCHKSUM.TYPE] != (int)TransType.ACK)
+						return DEFAULT_SEQNO;
 
-			if (recvSize == (int)TransSize.ACKSIZE) {
-				dataReceived = false;
-				if (!checksum.checkChecksum (buffer, (int)TransSize.ACKSIZE) ||
-				  buffer [(int)TransCHKSUM.SEQNO] != seqNo ||
-				  buffer [(int)TransCHKSUM.TYPE] != (int)TransType.ACK)
-				{
-					seqNo = (byte) buffer[(int)TransCHKSUM.SEQNO];
-				}
-				else
-				{
-					seqNo = (byte)((buffer[(int)TransCHKSUM.SEQNO] + 1) % 2);
-				}
-			}
- 
 			return seqNo;
+		}
+
+		private void nextSeqNo()
+		{
+			seqNo = (byte)((seqNo + 1) % 2);
 		}
 
 		/// <summary>
@@ -117,9 +114,24 @@ namespace Transportlaget
 		/// </param>
 		public void send(byte[] buf, int size)
 		{
+			
 			// TO DO Your own code
 			//Midlertidig kode
 			link.send(buf, size);
+			do
+			{
+				buffer[2] = seqNo;
+				buffer[3] = 0;
+				for (int i = 0; i < size; i++)
+				{
+					buffer[i+4] = buf[i];
+				}
+				checksum.calcChecksum(…);
+				link.send(buffer, size+4);
+			} while (receiveAck() != seqNo);
+			nextSeqNo(); ////////////////////////////////////// update seqNo
+			old_seqNo = DEFAULT_SEQNO;
+
 		}
 
 		/// <summary>
