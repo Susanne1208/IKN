@@ -97,7 +97,8 @@ namespace Transportlaget
 		{
 			byte[] ackBuf = new byte[(int)TransSize.ACKSIZE];
 			ackBuf [(int)TransCHKSUM.SEQNO] = (byte)
-				(ackType ? (byte)buffer [(int)TransCHKSUM.SEQNO] : (byte)(buffer [(int)TransCHKSUM.SEQNO] + 1) % 2);
+				(ackType ? (byte)buffer [(int)TransCHKSUM.SEQNO] : 
+					(byte)(buffer [(int)TransCHKSUM.SEQNO] + 1) % 2);
 			ackBuf [(int)TransCHKSUM.TYPE] = (byte)(int)TransType.ACK;
 			checksum.calcChecksum (ref ackBuf, (int)TransSize.ACKSIZE);
 			link.send(ackBuf, (int)TransSize.ACKSIZE);
@@ -113,25 +114,19 @@ namespace Transportlaget
 		/// Size.
 		/// </param>
 		public void send(byte[] buf, int size)
-		{
-			
+		{			
 			// TO DO Your own code
-			//Midlertidig kode
-			link.send(buf, size);
 			do
 			{
 				buffer[2] = seqNo;
-				buffer[3] = 0;
-				for (int i = 0; i < size; i++)
-				{
-					buffer[i+4] = buf[i];
-				}
-				checksum.calcChecksum(…);
+				buffer[3] = 0; //TransType.DATA
+				Array.Copy(buf, 0, buffer, 4, size);
+
+				checksum.calcChecksum(ref buffer, size);
 				link.send(buffer, size+4);
 			} while (receiveAck() != seqNo);
 			nextSeqNo(); ////////////////////////////////////// update seqNo
 			old_seqNo = DEFAULT_SEQNO;
-
 		}
 
 		/// <summary>
@@ -142,12 +137,20 @@ namespace Transportlaget
 		/// </param>
 		public int receive (ref byte[] buf)
 		{
+			bool state;
 			// TO DO Your own code
-			//Midlertidig kode
 			int size;
-			size = link.receive (ref buf);
-				//receive(buf);
-			return size;
+
+			do {
+				size = link.receive (ref buf);
+				var checksumCheck = checksum.checkChecksum (buffer, size);
+				state = checksumCheck && buffer [2] != old_seqNo;
+				sendAck (state);
+			} while(!state);
+				
+			old_seqNo = buffer [2];
+			Array.Copy (buffer, 1, buf, 0, buffer.Length - 4);
+			return size - 4;
 		}
 	}
 }

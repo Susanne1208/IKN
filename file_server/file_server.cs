@@ -31,6 +31,7 @@ namespace Application
 			Console.WriteLine("Inside file_server");
 			//Fejler her!!
 			t1 = new Transport(BUFSIZE, APP);
+
 			Console.WriteLine("Server started");
 
 			t1.receive (ref tempBuf); 

@@ -110,7 +110,6 @@ namespace Linklaget
 		{
 	    	// TO DO Your own code
 			var i = 0;
-
 			//Does not read bytes unless it begins with delimiter - 'A'
 			while (true) {
 				if (serialPort.ReadByte() == DELIMITER)
@@ -142,9 +141,7 @@ namespace Linklaget
 
 				tempByte = (byte)serialPort.ReadByte();
 			}
-
 			return i;
 		}
-
 	}
 }
