@@ -138,7 +138,6 @@ namespace Transportlaget
 		public int receive (ref byte[] buf)
 		{
 			bool state;
-			// TO DO Your own code
 			int size;
 
 			do {

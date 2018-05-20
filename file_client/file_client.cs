@@ -44,10 +44,11 @@ namespace Application
 
 			//Get filesize
 			fileSize = LIB.check_File_Exists (filePath);
+			int fileSizeInt = (int)fileSize;
 
 			//Sends filepath to server
 			Console.WriteLine ("Requesting file...");
-			t1.send (filePathBuf, fileSize);
+			t1.send (filePathBuf, fileSizeInt);
 
 			//If file does not exist, keep asking for existing file
 			/*while (fileSize == 0) {

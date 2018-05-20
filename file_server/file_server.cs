@@ -29,12 +29,14 @@ namespace Application
 
 			//string fileSizeStr = string.Empty;
 			Console.WriteLine("Inside file_server");
-			//Fejler her!!
+
 			t1 = new Transport(BUFSIZE, APP);
 
 			Console.WriteLine("Server started");
 
+		
 			t1.receive (ref tempBuf); 
+
 			filePath = Encoding.ASCII.GetString(tempBuf);
 			fileName = LIB.extractFileName (filePath);
 
@@ -60,7 +62,6 @@ namespace Application
 		{
 			// TO DO Your own code
 			// Transport.send(byte[] buf, int size)
-
 			Byte[] bufferServer = new Byte[BUFSIZE]; 
 			string fileName = String.Empty;
 
