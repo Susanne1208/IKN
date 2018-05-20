@@ -126,7 +126,8 @@ namespace Linklaget
 			}
 
 			var tempByte = (byte)serialPort.ReadByte();
-			Console.WriteLine (tempByte);
+			string tempString = tempByte.ToString;
+			Console.WriteLine (tempString);
 			while (tempByte != DELIMITER)
 			{
 				if (tempByte == (byte)'B')
