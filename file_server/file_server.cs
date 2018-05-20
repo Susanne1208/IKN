@@ -26,18 +26,15 @@ namespace Application
 			string fileName = string.Empty;
 			long fileSizeLong = 0;  
 			byte[] tempBuf = new byte[BUFSIZE];
-
-			//string fileSizeStr = string.Empty;
-			Console.WriteLine("Inside file_server");
-
 			t1 = new Transport(BUFSIZE, APP);
 
 			Console.WriteLine("Server started");
 
-		
 			t1.receive (ref tempBuf); 
-
+			Console.WriteLine ($"{tempBuf}");
 			filePath = Encoding.ASCII.GetString(tempBuf);
+
+			//Console.WriteLine ($"{filePath}");
 			fileName = LIB.extractFileName (filePath);
 
 			Console.WriteLine($"Server looking for file {fileName}");

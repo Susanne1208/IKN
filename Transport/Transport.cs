@@ -115,7 +115,6 @@ namespace Transportlaget
 		/// </param>
 		public void send(byte[] buf, int size)
 		{			
-			// TO DO Your own code
 			do
 			{
 				buffer[2] = seqNo;

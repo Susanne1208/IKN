@@ -33,7 +33,7 @@ namespace Application
 			long fileSize = 0;
 			byte[] filePathBuf;
 			string filePath;
-			string fileName;
+			//string fileName;
 			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
@@ -48,21 +48,10 @@ namespace Application
 
 			//Sends filepath to server
 			Console.WriteLine ("Requesting file...");
-			t1.send (filePathBuf, fileSizeInt);
-
-			//If file does not exist, keep asking for existing file
-			/*while (fileSize == 0) {
-				Console.WriteLine ("!File not found!");
-				Console.WriteLine ("Enter new file: ");
-				filePath = Console.ReadLine ();
-
-				Console.WriteLine ("Requesting file...");
-				//LIB.writeTextTCP (serverStream, filePath);
-				fileSize = LIB.getFileSizeTCP (serverStream);
-			}*/
+			//t1.send (filePathBuf, fileSizeInt);
 
 			//Receives file from server
-			Console.WriteLine ("Receiving file...");
+			//Console.WriteLine ("Receiving file...");
 			receiveFile (filePath, t1);
 	    }
 
@@ -77,27 +66,30 @@ namespace Application
 		/// </param>
 		private void receiveFile (String filePath, Transport transport)
 		{
-			int fileSize; 
-			byte[] receiveBuf = new byte[BUFSIZE];
-			string fileDirectory;
-			string fileName;
-			//Create directory for file
-			fileDirectory = "/root/Desktop/ServerFiles/";
-			Directory.CreateDirectory (fileDirectory);
-
-			fileName = LIB.extractFileName(filePath);
-			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
-			Console.WriteLine ("Reading file " + fileName + "...");
-
-			do
-			{
-				fileSize = transport.receive(ref receiveBuf);
-				Fs.Write(receiveBuf, 0, fileSize);
-
-			}while(fileSize > 0);
-
-			//Closes file after writing into it. 
-			Fs.Close ();
+			byte[] buf;
+			transport.receive (ref buf);
+			Console.WriteLine ($"Står her wuhu= {buf}");
+//			int fileSize; 
+//			byte[] receiveBuf = new byte[BUFSIZE];
+//			string fileDirectory;
+//			string fileName;
+//			//Create directory for file
+//			fileDirectory = "/root/Desktop/ServerFiles/";
+//			Directory.CreateDirectory (fileDirectory);
+//
+//			fileName = LIB.extractFileName(filePath);
+//			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
+//			Console.WriteLine ("Reading file " + fileName + "...");
+//
+//			do
+//			{
+//				fileSize = transport.receive(ref receiveBuf);
+//				Fs.Write(receiveBuf, 0, fileSize);
+//
+//			}while(fileSize > 0);
+//
+//			//Closes file after writing into it. 
+//			Fs.Close ();
 		}
 
 		/// <summary>
