@@ -144,8 +144,8 @@ namespace Transportlaget
 			int size;
 
 			do {
-				size = link.receive (ref buf);
-				var checksumCheck = checksum.calcChecksum (buffer, size);
+				size = link.receive (ref buffer);
+				var checksumCheck = checksum.checkChecksum (buffer, size);
 				state = checksumCheck && buffer [2] != old_seqNo;
 				sendAck (state);
 			} while(!state);
