@@ -69,7 +69,7 @@ namespace Application
 			//fileName = LIB.extractFileName (filePath);
 			Console.WriteLine (fileName);
 
-			FileStream Fs = new FileStream (filePath, FileMode.Open, FileAccess.Read);
+			FileStream Fs = new FileStream (fileName, FileMode.Open, FileAccess.Read);
 
 			int bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1 - Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
 			transport.send(bufferServer, bytesRead);
@@ -94,9 +94,9 @@ namespace Application
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Server starts...");
-			//while (true) {
+			while (true) {
 				new file_server ();
-			//}
+			}
 		}
 	}
 }

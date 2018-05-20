@@ -32,27 +32,28 @@ namespace Application
 	    	// TO DO Your own code
 			long fileSize = 0;
 			byte[] filePathBuf;
-			string filePath = "JAJA";
+			string filePath;
 			//string fileName;
 			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
-			//filePath = args [0];
+			filePath = args [0];
+			string fileName = LIB.extractFileName (filePath);
 
 			//Converts to bytes
-			//filePathBuf = Encoding.ASCII.GetBytes(filePath);
+			filePathBuf = Encoding.ASCII.GetBytes(filePath);
 
 			//Get filesize
-			//fileSize = LIB.check_File_Exists (filePath);
-			//int fileSizeInt = (int)fileSize;
+			fileSize = LIB.check_File_Exists (filePath);
+			int fileSizeInt = (int)fileSize;
 
 			//Sends filepath to server
-			//Console.WriteLine ("Requesting file...");
-			//t1.send (filePathBuf, fileSizeInt);
+			Console.WriteLine ("Requesting file...");
+			t1.send (filePathBuf, fileSizeInt);
 
 			//Receives file from server
-			//Console.WriteLine ("Receiving file...");
-			receiveFile (filePath, t1);
+			Console.WriteLine ("Receiving file...");
+			receiveFile (fileName, t1);
 	    }
 
 		/// <summary>
@@ -64,33 +65,34 @@ namespace Application
 		/// <param name='transport'>
 		/// Transportlaget
 		/// </param>
-		private void receiveFile (String filePath, Transport transport)
+		private void receiveFile (String fileName, Transport transport)
 		{
 			byte[] buf = new byte[BUFSIZE];
-			transport.receive (ref buf);
-			string wuhu = Encoding.ASCII.GetString(buf);
-			Console.WriteLine ($"Står her axby = {wuhu}");
-//			int fileSize; 
-//			byte[] receiveBuf = new byte[BUFSIZE];
-//			string fileDirectory;
-//			string fileName;
-//			//Create directory for file
-//			fileDirectory = "/root/Desktop/ServerFiles/";
-//			Directory.CreateDirectory (fileDirectory);
-//
-//			fileName = LIB.extractFileName(filePath);
-//			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
-//			Console.WriteLine ("Reading file " + fileName + "...");
-//
-//			do
-//			{
-//				fileSize = transport.receive(ref receiveBuf);
-//				Fs.Write(receiveBuf, 0, fileSize);
-//
-//			}while(fileSize > 0);
-//
-//			//Closes file after writing into it. 
-//			Fs.Close ();
+			//transport.receive (ref buf);
+			//string wuhu = Encoding.ASCII.GetString(buf);
+			//Console.WriteLine ($"Står her axby = {wuhu}");
+
+			int fileSize; 
+			byte[] receiveBuf = new byte[BUFSIZE];
+			string fileDirectory;
+			//string fileName;
+			//Create directory for file
+			fileDirectory = "/root/Desktop/ServerFiles/";
+			Directory.CreateDirectory (fileDirectory);
+
+			//fileName = LIB.extractFileName(filePath);
+			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
+			Console.WriteLine ("Reading file " + fileName + "...");
+
+			do
+			{
+				fileSize = transport.receive(ref receiveBuf);
+				Fs.Write(receiveBuf, 0, fileSize);
+
+			}while(fileSize > 0);
+
+			//Closes file after writing into it. 
+			Fs.Close ();
 		}
 
 		/// <summary>
