@@ -37,17 +37,17 @@ namespace Application
 			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
-			filePath = args [0];
+			//filePath = args [0];
 
 			//Converts to bytes
-			filePathBuf = Encoding.ASCII.GetBytes(filePath);
+			//filePathBuf = Encoding.ASCII.GetBytes(filePath);
 
 			//Get filesize
-			fileSize = LIB.check_File_Exists (filePath);
-			int fileSizeInt = (int)fileSize;
+			//fileSize = LIB.check_File_Exists (filePath);
+			//int fileSizeInt = (int)fileSize;
 
 			//Sends filepath to server
-			Console.WriteLine ("Requesting file...");
+			//Console.WriteLine ("Requesting file...");
 			//t1.send (filePathBuf, fileSizeInt);
 
 			//Receives file from server
@@ -68,7 +68,7 @@ namespace Application
 		{
 			byte[] buf;
 			transport.receive (ref buf);
-			Console.WriteLine ($"Står her wuhu= {buf}");
+			Console.WriteLine ($"Står her axby= {buf}");
 //			int fileSize; 
 //			byte[] receiveBuf = new byte[BUFSIZE];
 //			string fileDirectory;
