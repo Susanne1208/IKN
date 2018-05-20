@@ -148,10 +148,10 @@ namespace Transportlaget
 				var checksumCheck = checksum.checkChecksum (buffer, size);
 				state = checksumCheck && buffer [2] != old_seqNo;
 				sendAck (checksumCheck);
-			} while(!state);
+			} while(state);
 				
 			old_seqNo = buffer [2];
-			Array.Copy (buffer, 1, buf, 0, buffer.Length - 4);
+			Array.Copy (buffer, 2, buf, 0, buffer.Length - 4);
 			return size - 4;
 		}
 	}

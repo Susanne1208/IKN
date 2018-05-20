@@ -69,7 +69,7 @@ namespace Application
 			byte[] buf = new byte[BUFSIZE];
 			transport.receive (ref buf);
 			string wuhu = Encoding.ASCII.GetString(buf);
-			Console.WriteLine ($"Står her axby= {wuhu}");
+			Console.WriteLine ($"Står her axby = {wuhu}");
 //			int fileSize; 
 //			byte[] receiveBuf = new byte[BUFSIZE];
 //			string fileDirectory;

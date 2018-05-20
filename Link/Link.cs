@@ -102,7 +102,7 @@ namespace Linklaget
 
 			// Write to serialport
 			string wuhu = Encoding.ASCII.GetString(buf);
-			Console.WriteLine (wuhu);
+			//Console.WriteLine (wuhu);
 			serialPort.Write(buf, 0, tempListsize);
 		}
 
@@ -126,8 +126,8 @@ namespace Linklaget
 			}
 
 			var tempByte = (byte)serialPort.ReadByte();
-			string tempString = tempByte.ToString;
-			Console.WriteLine (tempString);
+
+			//Console.WriteLine (tempString);
 			while (tempByte != DELIMITER)
 			{
 				if (tempByte == (byte)'B')
@@ -143,7 +143,8 @@ namespace Linklaget
 						buf[i++] = (byte)'B';
 						break;
 					default:
-						return 0;
+						//return 0;
+						break;
 					}
 				}
 				else
