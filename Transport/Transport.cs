@@ -118,11 +118,13 @@ namespace Transportlaget
 			//link.send (buf, size);
 			do
 			{
+				//Codes to default segment header format
 				buffer[2] = seqNo;
 				buffer[3] = 0; //TransType.DATA
 				Array.Copy(buf, 0, buffer, 4, size);
-
 				checksum.calcChecksum(ref buffer, size);
+
+				//Calls send in Link Layer
 				link.send(buffer, size+4);
 			} while (receiveAck() != seqNo);
 			nextSeqNo(); ////////////////////////////////////// update seqNo
@@ -143,7 +145,7 @@ namespace Transportlaget
 
 			do {
 				size = link.receive (ref buf);
-				var checksumCheck = checksum.checkChecksum (buffer, size);
+				var checksumCheck = checksum.calcChecksum (buffer, size);
 				state = checksumCheck && buffer [2] != old_seqNo;
 				sendAck (state);
 			} while(!state);

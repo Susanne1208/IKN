@@ -32,7 +32,7 @@ namespace Application
 	    	// TO DO Your own code
 			long fileSize = 0;
 			byte[] filePathBuf;
-			string filePath;
+			string filePath = "JAJA";
 			//string fileName;
 			t1 = new Transport(BUFSIZE, APP);
 
