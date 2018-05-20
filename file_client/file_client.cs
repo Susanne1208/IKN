@@ -66,9 +66,10 @@ namespace Application
 		/// </param>
 		private void receiveFile (String filePath, Transport transport)
 		{
-			byte[] buf;
+			byte[] buf = new byte[BUFSIZE];
 			transport.receive (ref buf);
-			Console.WriteLine ($"Står her axby= {buf}");
+			string wuhu = Encoding.ASCII.GetString(buf);
+			Console.WriteLine ($"Står her axby= {wuhu}");
 //			int fileSize; 
 //			byte[] receiveBuf = new byte[BUFSIZE];
 //			string fileDirectory;

@@ -94,9 +94,9 @@ namespace Application
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Server starts...");
-			while (true) {
+			//while (true) {
 				new file_server ();
-			}
+			//}
 		}
 	}
 }

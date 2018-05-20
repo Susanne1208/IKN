@@ -2,6 +2,7 @@ using System;
 using System.IO.Ports;
 using System.Text;
 using Library;
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -68,33 +69,41 @@ namespace Linklaget
 		/// </param>
 		public void send (byte[] buf, int size)
 		{
-			// TO DO Your own code
-			string xx = Encoding.ASCII.GetString(buf);
-			StringBuilder sb = new StringBuilder (xx);
-
-			sb.Append (DELIMITER);
-
-			for (int i = 0; i < size; i++) 
+			var i = 0;
+			// start framing
+			var tempList = new List<byte>(1)
 			{
-				switch (buf [i]) 
-				{
+				DELIMITER 
+			};
+
+			for (; i < size;) {
+				switch (buf [i]) {
 				case DELIMITER:
-					sb.Append ("BC");
+					tempList.Add ((byte)'B');
+					tempList.Add ((byte)'C');
 					break;
+
 				case (byte)'B':
-					sb.Append ("BD");
+					tempList.Add ((byte)'B');
+					tempList.Add ((byte)'D');
 					break;
+
 				default:
-					sb.Append(buf[i]);
+					tempList.Add (buf [i]);
 					break;
 				}
+				++i;
 			}
 
-			sb.Append (DELIMITER);
+			// End Frame
+			tempList.Add(DELIMITER);
+			int tempListsize = tempList.Count;
+			buf = tempList.ToArray ();
 
-
-			string SendData = sb.ToString ();
-			serialPort.Write (SendData);
+			// Write to serialport
+			string wuhu = Encoding.ASCII.GetString(buf);
+			Console.WriteLine (wuhu);
+			serialPort.Write(buf, 0, tempListsize);
 		}
 
 		/// <summary>

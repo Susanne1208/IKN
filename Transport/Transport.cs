@@ -115,18 +115,18 @@ namespace Transportlaget
 		/// </param>
 		public void send(byte[] buf, int size)
 		{			
-			link.send (buf, size);
-			//do
-			//{
-			//	buffer[2] = seqNo;
-			//	buffer[3] = 0; //TransType.DATA
-			//	Array.Copy(buf, 0, buffer, 4, size);
+			//link.send (buf, size);
+			do
+			{
+				buffer[2] = seqNo;
+				buffer[3] = 0; //TransType.DATA
+				Array.Copy(buf, 0, buffer, 4, size);
 
-			//	checksum.calcChecksum(ref buffer, size);
-			//	link.send(buffer, size+4);
-			//} while (receiveAck() != seqNo);
-			//nextSeqNo(); ////////////////////////////////////// update seqNo
-			//old_seqNo = DEFAULT_SEQNO;
+				checksum.calcChecksum(ref buffer, size);
+				link.send(buffer, size+4);
+			} while (receiveAck() != seqNo);
+			nextSeqNo(); ////////////////////////////////////// update seqNo
+			old_seqNo = DEFAULT_SEQNO;
 		}
 
 		/// <summary>
@@ -137,20 +137,20 @@ namespace Transportlaget
 		/// </param>
 		public int receive (ref byte[] buf)
 		{
-			return link.receive (ref buf);
-//			bool state;
-//			int size;
-//
-//			do {
-//				size = link.receive (ref buf);
-//				var checksumCheck = checksum.checkChecksum (buffer, size);
-//				state = checksumCheck && buffer [2] != old_seqNo;
-//				sendAck (state);
-//			} while(!state);
-//				
-//			old_seqNo = buffer [2];
-//			Array.Copy (buffer, 1, buf, 0, buffer.Length - 4);
-//			return size - 4;
+			//return link.receive (ref buf);
+			bool state;
+			int size;
+
+			do {
+				size = link.receive (ref buf);
+				var checksumCheck = checksum.checkChecksum (buffer, size);
+				state = checksumCheck && buffer [2] != old_seqNo;
+				sendAck (state);
+			} while(!state);
+				
+			old_seqNo = buffer [2];
+			Array.Copy (buffer, 1, buf, 0, buffer.Length - 4);
+			return size - 4;
 		}
 	}
 }
