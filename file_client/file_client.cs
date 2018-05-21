@@ -30,26 +30,29 @@ namespace Application
 	    private file_client(String[] args)
 	    {
 	    	// TO DO Your own code
-			long fileSize = 0;
+			int fileSize = 0;
 			byte[] filePathBuf;
 			string filePath;
 			//string fileName;
 			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
-			filePath = args [0];
+			filePath = @"C:/root/Desktop/ServerFiles/Kitten1.jpg";//args [0];
 			string fileName = LIB.extractFileName (filePath);
 
 			//Converts to bytes
 			filePathBuf = Encoding.ASCII.GetBytes(filePath);
 
 			//Get filesize
-			fileSize = LIB.check_File_Exists (filePath);
-			int fileSizeInt = (int)fileSize;
+//			fileSize = LIB.check_File_Exists (filePath);
+//			int fileSizeInt = (int)fileSize;
+
+			fileSize = filePath.Length;
+
 
 			//Sends filepath to server
 			Console.WriteLine ("Requesting file...");
-			t1.send (filePathBuf, fileSizeInt);
+			t1.send (filePathBuf, fileSize);
 
 			//Receives file from server
 			Console.WriteLine ("Receiving file...");
