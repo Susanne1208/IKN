@@ -40,7 +40,7 @@ namespace Application
 			Console.WriteLine($"Server looking for file {fileName}");
 
 			fileSizeLong = LIB.check_File_Exists (fileName);
-			sendFile (fileName, fileSizeLong, t1);
+			sendFile (filePath, fileSizeLong, t1);
 		}
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace Application
 		/// <param name='tl'>
 		/// Tl.
 		/// </param>
-		private void sendFile(String fileName, long fileSize, Transport transport)
+		private void sendFile(string filePath, long fileSize, Transport transport)
 		{
 //			string wuhu = "AXBY";
 //			byte[] buf = Encoding.ASCII.GetBytes (wuhu);
@@ -63,26 +63,38 @@ namespace Application
 			//transport.send (buf, buf.Length);
 			// TO DO Your own code
 			// Transport.send(byte[] buf, int size)
-			Byte[] bufferServer = new Byte[BUFSIZE]; 
+			//Byte[] bufferServer = new Byte[BUFSIZE];
 			//string fileName = String.Empty;
 
-			//fileName = LIB.extractFileName (filePath);
+			string fileName = LIB.extractFileName(filePath);
 			Console.WriteLine (fileName);
 
-			FileStream Fs = new FileStream (fileName, FileMode.Open, FileAccess.Read);
-
-			int bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1 - Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
-			transport.send(bufferServer, bytesRead);
-
-			//Whileloop fortsætter, så længe der er bytes at sende (fra fil)
-			while(bytesRead > 0)
+			//FileStream Fs = new FileStream (filePath, FileMode.Open, FileAccess.Read);
+			using (FileStream fs = File.OpenRead(filePath))
 			{
-				bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1
-				transport.send(bufferServer, bytesRead);
+				byte[] bufferServer = new byte[BUFSIZE]; 
+				int bytesRead = fs.Read (bufferServer, 0, bufferServer.Length);
+
+				UTF8Encoding temp = new UTF8Encoding(true);
+				while (bytesRead > 0)
+				{
+					transport.send (bufferServer, bytesRead);
+					bytesRead = fs.Read (bufferServer, 0, bufferServer.Length);
+				}
 			}
 
+//			int bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1 - Der bliver læst fra fileName, puttes ind i bufferserveren og må max læse 1000 bytes(BUFSIZE)
+//			transport.send(bufferServer, bytesRead);
+//
+//			Whileloop fortsætter, så længe der er bytes at sende (fra fil)
+//			while(bytesRead > 0)
+//			{
+//				bytesRead = Fs.Read(bufferServer, 0, 1); // Ændret fra BUFSIZE til 1
+//				transport.send(bufferServer, bytesRead);
+//			}
+//
 			Console.WriteLine ("File sent!");
-			Fs.Close ();
+//			Fs.Close ();
 		}
 
 		/// <summary>
