@@ -137,21 +137,23 @@ namespace Linklaget
 					switch (newByte)
 					{
 					case (byte)'C':
-						buf[i++] = (byte)'A';
+						buffer[i++] = (byte)'A';
 						break;
 					case (byte)'D':
-						buf[i++] = (byte)'B';
+						buffer[i++] = (byte)'B';
 						break;
 					default:
+						Console.WriteLine ("Error, no C or D after B");
 						//return 0;
 						break;
 					}
 				}
 				else
-					buf[i++] = tempByte;
+					buffer[i++] = tempByte;
 
 				tempByte = (byte)serialPort.ReadByte();
 			}
+			Array.Copy (buffer, buf, buffer.Length);
 			return i;
 		}
 	}
