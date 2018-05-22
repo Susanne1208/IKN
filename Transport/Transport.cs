@@ -87,6 +87,10 @@ namespace Transportlaget
 			return true;
 		}
 
+		private void nextSeqNo()
+		{
+			seqNo = (byte)((seqNo + 1) % 2);
+		}
 		/// <summary>
 		/// Sends the ack.
 		/// </summary>
@@ -121,7 +125,6 @@ namespace Transportlaget
 		/// </param>
 		public void send(byte[] buf, int size)
 		{
-			// Our own code
 			do {
 				buffer[(int)TransCHKSUM.SEQNO] = seqNo;
 				buffer[(int)TransCHKSUM.TYPE] = (int)TransType.DATA;
@@ -132,10 +135,11 @@ namespace Transportlaget
 					buffer [1]++;
 					Console.WriteLine ($"Noise! - byte #1 is spoiled in transmission #{errorCount}");
 				}
-
+				//Calls send in Link Layer
 				link.send (buffer, size+4);
 			} while (!receiveAck());
 
+			nextSeqNo ();
 			old_seqNo = DEFAULT_SEQNO;
 		}
 
