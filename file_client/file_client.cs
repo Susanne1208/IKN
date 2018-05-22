@@ -33,7 +33,6 @@ namespace Application
 			int fileSize = 0;
 			byte[] filePathBuf;
 			string filePath;
-			//string fileName;
 			t1 = new Transport(BUFSIZE, APP);
 
 			//Receives filepath as a string. 
@@ -42,13 +41,7 @@ namespace Application
 
 			//Converts to bytes
 			filePathBuf = Encoding.ASCII.GetBytes(filePath);
-
-			//Get filesize
-//			fileSize = LIB.check_File_Exists (filePath);
-//			int fileSizeInt = (int)fileSize;
-
 			fileSize = filePath.Length;
-
 
 			//Sends filepath to server
 			Console.WriteLine ("Requesting file...");
@@ -70,31 +63,46 @@ namespace Application
 		/// </param>
 		private void receiveFile (String fileName, Transport transport)
 		{
-			byte[] buf = new byte[BUFSIZE];
-			//transport.receive (ref buf);
-			//string wuhu = Encoding.ASCII.GetString(buf);
-			//Console.WriteLine ($"Står her axby = {wuhu}");
-
-			int fileSize; 
+			string fileNameS = "Kitten.jpg";
 			byte[] receiveBuf = new byte[BUFSIZE];
+
 			string fileDirectory;
-			//string fileName;
-			//Create directory for file
 			fileDirectory = "/root/Desktop/ServerFiles/";
 			Directory.CreateDirectory (fileDirectory);
 
-			//fileName = LIB.extractFileName(filePath);
-			FileStream Fs = new FileStream (fileDirectory + fileName, FileMode.OpenOrCreate, FileAccess.Write);
+			FileStream Fs = new FileStream (fileDirectory + fileNameS, FileMode.OpenOrCreate, FileAccess.Write);
 			Console.WriteLine ("Reading file " + fileName + "...");
 
-			do
-			{
-				fileSize = transport.receive(ref receiveBuf);
-				Fs.Write(receiveBuf, 0, fileSize);
+			//int bytesRead = transport.receive (ref receiveBuf);
 
-			}while(fileSize > 0);
+//			while (bytesRead >= 0)
+//			{
+//				Fs.Write (receiveBuf, 0, bytesRead);
+//				bytesRead = transport.receive (ref receiveBuf);
+//				Console.WriteLine ($"{bytesRead}");
+//			}
+//			
+			byte[] sizebuf = new byte[BUFSIZE];
+			int size = transport.receive (ref sizebuf);
+			sizebuf [size] = 0;
+			string str = ((new UTF8Encoding ()).GetString (sizebuf)).Substring (0, size);
+			long fileSizeLong = long.Parse (str);
+			Console.WriteLine (fileSizeLong);
+			Console.WriteLine (str);
 
-			//Closes file after writing into it. 
+			int bytesRead = 0;
+
+			do {
+				int i = 0;
+				i = transport.receive (ref receiveBuf);
+				//Console.WriteLine ($"{bytesRead}");
+				Fs.Write (receiveBuf, 0, i);
+				bytesRead += i;
+				//Console.WriteLine ($"{bytesRead}");
+			} while((long)bytesRead < (long)fileSizeLong);
+
+			Console.WriteLine("File received");
+
 			Fs.Close ();
 		}
 
