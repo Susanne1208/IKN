@@ -259,11 +259,11 @@ namespace Transportlaget
 			ackBuf [(int)TransCHKSUM.TYPE] = (byte)(int)TransType.ACK;
 			checksum.calcChecksum (ref ackBuf, (int)TransSize.ACKSIZE);
 
-			if(++errorCount == 2) // Simulate noise
-			{
-				ackBuf[1]++; // Important: Only spoil a checksum-field (ackBuf[0] or ackBuf[1])
-				Console.WriteLine($"Noise! byte #1 is spoiled in ACK-package #{errorCount}");
-			}
+//			if(++errorCount == 2) // Simulate noise
+//			{
+//				ackBuf[1]++; // Important: Only spoil a checksum-field (ackBuf[0] or ackBuf[1])
+//				Console.WriteLine($"Noise! byte #1 is spoiled in ACK-package #{errorCount}");
+//			}
 
 			link.send(ackBuf, (int)TransSize.ACKSIZE);
 		}
@@ -286,10 +286,10 @@ namespace Transportlaget
 				Array.Copy (buf, 0, buffer, (int)TransCHKSUM.DATA, size);
 				checksum.calcChecksum (ref buffer, size+4);
 
-				if (++errorCount == 2) {
-					buffer [1]++;
-					Console.WriteLine ($"Noise! - byte #1 is spoiled in transmission #{errorCount}");
-				}
+//				if (++errorCount == 2) {
+//					buffer [1]++;
+//					Console.WriteLine ($"Noise! - byte #1 is spoiled in transmission #{errorCount}");
+//				}
 
 				link.send (buffer, size+4);
 			} while (!receiveAck());

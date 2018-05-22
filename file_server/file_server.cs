@@ -63,17 +63,26 @@ namespace Application
 			string concatString = hardcodedFilePath + fileName;
 			Console.WriteLine (concatString);
 
+			long fileSizeFile = LIB.check_File_Exists("Kitten.jpg");
+			Console.WriteLine (fileSizeFile);
+			byte[] fileNameBuf = Encoding.ASCII.GetBytes (hardcodedFilePath);
+			string fileSizestring = fileSizeFile.ToString();
+			//byte[] bufsize = Encoding.ASCII.GetBytes (fileSizestring);
+			Console.WriteLine(fileSizestring);
+			transport.send (System.Text.Encoding.UTF8.GetBytes(fileSizestring), fileSizestring.Length);
+
 			//FileStream Fs = new FileStream (filePath, FileMode.Open, FileAccess.Read);
 			using (FileStream fs = File.OpenRead(hardcodedFilePath))
 			{
 				byte[] bufferServer = new byte[BUFSIZE]; 
 				int bytesRead = fs.Read (bufferServer, 0, bufferServer.Length);
 
-				UTF8Encoding temp = new UTF8Encoding(true);
+				//UTF8Encoding temp = new UTF8Encoding(true);
 				while (bytesRead > 0)
 				{
 					transport.send (bufferServer, bytesRead);
 					bytesRead = fs.Read (bufferServer, 0, bufferServer.Length);
+					Console.WriteLine ($"{bytesRead}");
 				}
 			}
 

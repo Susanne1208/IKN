@@ -13,7 +13,8 @@ namespace Transportlaget
 		CHKSUMHIGH = 0,
 		CHKSUMLOW = 1,
 		SEQNO = 2,
-		TYPE = 3
+		TYPE = 3,
+			DATA = 4
 	};
 
 	public enum TransType
