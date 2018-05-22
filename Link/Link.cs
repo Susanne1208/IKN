@@ -101,7 +101,7 @@ namespace Linklaget
 			buf = tempList.ToArray ();
 
 			// Write to serialport
-			string wuhu = Encoding.ASCII.GetString(buf);
+			//string wuhu = Encoding.ASCII.GetString(buf);
 			//Console.WriteLine (wuhu);
 			serialPort.Write(buf, 0, tempListsize);
 		}
@@ -153,6 +153,8 @@ namespace Linklaget
 
 				tempByte = (byte)serialPort.ReadByte();
 			}
+			int bufferlength = buffer.Length;
+			Console.WriteLine($"{bufferlength}");
 			Array.Copy (buffer, buf, buffer.Length);
 			return i;
 		}
