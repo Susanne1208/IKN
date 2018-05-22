@@ -76,26 +76,27 @@ namespace Linklaget
 		public void send (byte[] buf, int size)
 		{
 			// TO DO Your own code
-			List<byte> byteList = new List<byte>(1)
+			List<byte> dataList = new List<byte>(1)
 			{
 				DELIMITER // start delimiter
 			};
 
 			for (var i = 0; i < size; i++) 
 			{
-				if (buf[i] == 0x41) { // hvis elementet er et ascii A
-					byteList.Add (0x42);
-					byteList.Add (0x43);
-				} else if (buf[i] == 0x42) { // hvis elementet er et ascii B
-					byteList.Add (0x42);
-					byteList.Add (0x44);
+				if (buf[i] == 'A') {        // hvis  ascii A erstat med B og C
+					dataList.Add ((byte)'B');
+					dataList.Add ((byte)'C');
+				} else if (buf[i] == 'B')   // hvis ascii B erstat med B og D
+				{ 
+					dataList.Add ((byte)'B');
+					dataList.Add ((byte)'D');
 				} else
-					byteList.Add (buf[i]);
+					dataList.Add (buf[i]);
 			}
 
-			byteList.Add (DELIMITER); // stop delimiter
+			dataList.Add (DELIMITER); // stop delimiter
 
-			serialPort.Write (byteList.ToArray (), 0, byteList.Count);
+			serialPort.Write (dataList.ToArray (), 0, dataList.Count);
 		}
 
 		/// <summary>
@@ -113,25 +114,25 @@ namespace Linklaget
 			for(;;)
 			{
 				if (serialPort.ReadByte() == DELIMITER)
-					break;
+					break;                                         //ikke mere data, break!
 			}
-			byte received = (byte)serialPort.ReadByte();
+			byte receivedByte = (byte)serialPort.ReadByte();
 
-			while(received != DELIMITER)
+			while(receivedByte != DELIMITER)                         //sålænge delimiter ikke er någet
 			{
-				if (received == (byte)'B') {
-					var nextbyte = serialPort.ReadByte ();
-					if (nextbyte == (byte)'C')
-						buf[index++] = (byte)'A';
-					else if (nextbyte == (byte)'D')
-						buf[index++] = (byte)'B';
+				if (receivedByte == (byte)'B') {
+					var nextdata = serialPort.ReadByte ();          
+					if (nextdata == (byte)'C')
+						buf[index++] = (byte)'A';                   //hopper videre fra B til A
+					else if (nextdata == (byte)'D')
+						buf[index++] = (byte)'B';                  //videre til B
 					else
 						return 0;
 					//error
 				} else
-					buf [index++] = received;
+					buf [index++] = receivedByte;               
 
-				received = (byte)serialPort.ReadByte ();
+				receivedByte = (byte)serialPort.ReadByte ();
 			}
 
 			return index;
