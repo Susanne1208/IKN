@@ -57,20 +57,14 @@ namespace Application
 		/// </param>
 		private void sendFile(string filePath, long fileSize, Transport transport)
 		{
-//			string wuhu = "AXBY";
-//			byte[] buf = Encoding.ASCII.GetBytes (wuhu);
-			
-			//transport.send (buf, buf.Length);
-			// TO DO Your own code
-			// Transport.send(byte[] buf, int size)
-			//Byte[] bufferServer = new Byte[BUFSIZE];
-			//string fileName = String.Empty;
-
+			string hardcodedFilePath = "Kitten.jpg";
 			string fileName = LIB.extractFileName(filePath);
 			Console.WriteLine (fileName);
+			string concatString = hardcodedFilePath + fileName;
+			Console.WriteLine (concatString);
 
 			//FileStream Fs = new FileStream (filePath, FileMode.Open, FileAccess.Read);
-			using (FileStream fs = File.OpenRead(filePath))
+			using (FileStream fs = File.OpenRead(hardcodedFilePath))
 			{
 				byte[] bufferServer = new byte[BUFSIZE]; 
 				int bytesRead = fs.Read (bufferServer, 0, bufferServer.Length);
