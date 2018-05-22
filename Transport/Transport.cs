@@ -125,20 +125,28 @@ namespace Transportlaget
 		/// </param>
 		public void send(byte[] buf, int size)
 		{
-			do {
-				buffer[(int)TransCHKSUM.SEQNO] = seqNo;
-				buffer[(int)TransCHKSUM.TYPE] = (int)TransType.DATA;
-				Array.Copy (buf, 0, buffer, (int)TransCHKSUM.DATA, size);
+			// TO DO Your own code
+			do 
+			{
+				//Codes to default segment header format from assignment
+				buffer[(int)TransCHKSUM.SEQNO] = seqNo; //Bytes
+				buffer[(int)TransCHKSUM.TYPE] = (int)TransType.DATA; //0-1000 bytes
+				Array.Copy (buf, 0, buffer, (int)TransCHKSUM.DATA, size); //Copies a range of elements in one Array to another Array
 				checksum.calcChecksum (ref buffer, size+4);
 
-				if (++errorCount == 2) {
+				//Error handling
+				if (++errorCount == 2) 
+				{
+					//checking the buffer
 					buffer [1]++;
 					Console.WriteLine ($"Noise! - byte #1 is spoiled in transmission #{errorCount}");
 				}
-				//Calls send in Link Layer
-				link.send (buffer, size+4);
-			} while (!receiveAck());
 
+				//Calls send in Link Layer and send det buffer 
+				link.send (buffer, size+4);
+			} 
+
+			while (!receiveAck()); //while there is something to send
 			nextSeqNo ();
 			old_seqNo = DEFAULT_SEQNO;
 		}
@@ -151,19 +159,23 @@ namespace Transportlaget
 		/// </param>
 		public int receive (ref byte[] buf)
 		{
-			int receivedAmount;
-			bool statusCheck;
+			// TO DO Your own code
+			bool state = false;
+			int bytesReceived = 0;
 
-			do {
-				receivedAmount = link.receive (ref buffer);
-				var checksumCheck = checksum.checkChecksum (buffer, receivedAmount);
-				statusCheck = checksumCheck && buffer [(int)TransCHKSUM.SEQNO] != old_seqNo;
+			do 
+			{
+				bytesReceived = link.receive (ref buffer); //Calls linkLayer receive function for received bytes
+				var checksumCheck = checksum.checkChecksum (buffer, bytesReceived); 
+				state = checksumCheck && buffer [(int)TransCHKSUM.SEQNO] != old_seqNo;
 				sendAck (checksumCheck);
-			} while(!statusCheck);
+			
+			} while(!state); //while state is true
 
-			old_seqNo = buffer [(int)TransCHKSUM.SEQNO];
-			Array.Copy (buffer, (int)TransCHKSUM.DATA, buf, 0, buffer.Length - 4);
-			return receivedAmount-4;
+			//old_seqNo = buffer [2];
+			old_seqNo = buffer [(int)TransCHKSUM.SEQNO];//old seqNo get reassigned
+			Array.Copy (buffer, (int)TransCHKSUM.DATA, buf, 0, buffer.Length - 4); //Copies a range of elements in one Array to another Array
+			return bytesReceived-4; // - headersize (only wants DATA)
 		}
 	}
 }
